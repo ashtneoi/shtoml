@@ -2,9 +2,7 @@ extern crate toml;
 
 use std::env;
 use std::fs;
-use std::io;
 use std::process::exit;
-use std::str::FromStr;
 
 use toml::Value;
 
@@ -78,5 +76,30 @@ fn main() {
         },
     };
 
-    println!("{:?}", parsed);
+    let mut v: &Value = &parsed;
+    for key_part in key {
+        let t = match v {
+            &Value::Table(ref x) => x, // TODO: figure out `ref`
+            _ => {
+                eprintln!("error: value is not a table"); // TODO: better error
+                exit(1);
+            },
+        };
+        v = t.get(&key_part).unwrap_or_else(|| {
+            eprintln!("error: can't find key"); // TODO: better error
+            exit(1);
+        });
+    }
+
+    match v {
+        Value::String(x) => println!("{}", x),
+        Value::Integer(x) => println!("{}", x),
+        Value::Float(x) => println!("{}", x),
+        Value::Boolean(x) => println!("{}", x),
+        Value::Datetime(x) => println!("{}", x),
+        _ => {
+            eprintln!("error: value is not a scalar");
+            exit(1);
+        },
+    };
 }
