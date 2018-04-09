@@ -25,7 +25,7 @@ fn exit_with_usage() -> ! {
 
 fn parse_key(key_str: &str) -> Option<Vec<String>> {
     let fake_table_string = format!(
-        "[{}]\n{} = 0", key_str, SENTINEL_KEY);
+        "[{}]\n{} = 0\n", key_str, SENTINEL_KEY);
     let fake_table = match fake_table_string.parse::<Value>().ok()? {
         Value::Table(x) => x,
         _ => panic!(),
