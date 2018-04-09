@@ -28,4 +28,4 @@ yellow = false
 
 ## the name
 
-"shtoml" stands for SHell TOML.
+"shtoml" stands for "SHell TOML".
