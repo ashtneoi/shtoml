@@ -41,7 +41,7 @@ fn parse_key(key_str: &str) -> Option<Vec<String>> {
         keys.push(key.to_string());
         t = match val {
             Value::Table(x) => &x,
-            _ => panic!(),
+            _ => return None,
         };
     }
 
