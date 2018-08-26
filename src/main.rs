@@ -24,9 +24,8 @@ fn exit_with_usage() -> ! {
 }
 
 fn parse_key(key_str: &str) -> Option<Vec<String>> {
-    let fake_table_string = format!(
-        "[{}]\n{} = 0\n", key_str, SENTINEL_KEY);
-    let fake_table = match fake_table_string.parse::<Value>().ok()? {
+    let fake_table = format!("[{}]\n{} = 0\n", key_str, SENTINEL_KEY);
+    let fake_table = match fake_table.parse::<Value>().ok()? {
         Value::Table(x) => x,
         _ => panic!(),
     };
@@ -56,25 +55,22 @@ fn main() {
     }
 
     let filename = args[1];
-    let key = parse_key(args[2]).unwrap_or_else(|| {
-        eprintln!("error: invalid key");
-        exit(2);
-    });
+    let key = parse_key(args[2])
+        .unwrap_or_else(|| {
+            eprintln!("error: invalid key");
+            exit(2);
+        });
 
-    let file = match fs::read(filename) {
-        Ok(x) => x,
-        Err(e) => {
+    let file = fs::read(filename)
+        .unwrap_or_else(|e| {
             eprintln!("error: can't read file ({})", e);
             exit(2);
-        },
-    };
-    let parsed: Value = match toml::de::from_slice(&file) {
-        Ok(x) => x,
-        Err(e) => {
+        });
+    let parsed: Value = toml::de::from_slice(&file)
+        .unwrap_or_else(|e| {
             eprintln!("error: can't parse file ({})", e);
             exit(1);
-        },
-    };
+        });
 
     let mut v: &Value = &parsed;
     for key_part in key {
