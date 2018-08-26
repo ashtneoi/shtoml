@@ -79,7 +79,7 @@ fn main() {
     let mut v: &Value = &parsed;
     for key_part in key {
         let t = match v {
-            &Value::Table(ref x) => x, // TODO: figure out `ref`
+            &Value::Table(ref x) => x,
             _ => {
                 eprintln!("error: value is not a table"); // TODO: better error
                 exit(1);
